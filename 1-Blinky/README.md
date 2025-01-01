@@ -1,0 +1,20 @@
+# Blinky
+## Introduction
+This project blinks the USR-LED connected to pin PC13 at a frequency of 1 Hz. The purpose of this simple project was to familiarize myself with the IDE and hardware.
+
+The program begins by initializing the internal timers and pin PC13 as a gpio output. The pin is then set and reset at a frequency of 1 Hz. The setting and resetting of the pin turns the onboard on and off respectively.
+
+To compile and flash the program to the chip, I used the 'Run' option in [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html). To connect the board to the computer I used an [ST-Link/V2](https://www.st.com/en/development-tools/st-link-v2.html#sample-buy).
+
+## Other Tools
+Saleae Logic 2 logic analyzer and associated software used to verify frequency.
+
+## Project Setup
+To setup, I connected the logic analyzer channel 0 input to PC13 to determine frequency of the LED blinking.
+
+## Images
+Below are images of the project setup and frequency verification.
+
+Setup: ![Project Setup](../Images/1-Blinky/Setup.jpeg)
+
+Frequency Verification: ![Frequency Verification](../Images/1-Blinky/Frequency-Verify.png)
