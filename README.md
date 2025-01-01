@@ -19,10 +19,12 @@ Interprocess Communication Methods Used
 - DMA
 
 Tools used
+- [ST-Link/V2](https://www.st.com/en/development-tools/st-link-v2.html#sample-buy)
 - [Oscilloscope](http://www.hanmatek.cn/en/index.php?s=/Show/index/cid/14/id/39.html)
 - [Logic Analyzer](https://www.saleae.com/products/saleae-logic-8)
 
 Software used
+- [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html)
 - [Saleae Logic 2](https://www.saleae.com/pages/downloads)
 - [Kicad](https://www.kicad.org/) (for schematics)
 
@@ -45,54 +47,8 @@ Unless otherwise specified, this section contains the default hardware timer con
 
 # Projects
 
-## adc-dma-led-dimmer
-### Overview
-This project takes analog data from a potentiometer then generates a corresponding PWM signal to dim an LED. The analog data is converted to a digital value and these values are stored in a buffer. When the buffer is full, an interrupt is generated which releases a semaphore. The LED control task acquires this semaphore and processes the buffer via DMA. The values in the buffer are used to update the CCR to change the duty cycle of the PWM signal used to drive the LED.
-
-### CMSIS-RTOS Settings
-- All default settings
-
-### TIM Settings
-- Prescaler = 72 - 1 (subtract 1 since register adds 1)
-- ARR = 256 - 1
-- Resulting frequency is 3.906 kHz
-- All other values default 
-
-### Software
-Saleae Logic 2 software used.
-
-### Hardware
-Logic analyzer used to verify response. Oscilloscope used for quick debugging of PWM signals.
-
-### Schematic
-
-Schematic: ![Schematic](Images/adc-dma-led-dimmer/Schematic.svg)
-
-### Images
-Below are images of the project setup and response verification.
-
-Setup: ![Project Setup](Images/adc-dma-led-dimmer/setup.jpeg)
-
-Response Verification. PWM Signal and Analog signal are channels 0 and 1 respectively: ![Response Verification](Images/adc-dma-led-dimmer/Response-Verification.png)
-
-PWM Signal Verification. PWM Signal and Analog signal are channels 0 and 1 respectively: ![PWM Signal Verification](Images/adc-dma-led-dimmer/Accuracy-Verification.png)
-
 ## Blinky
-### Overview
-This project blinks the USR-LED connected to pin PC13 at a frequency of 1 Hz. The purpose of this simple project was to familiarize myself with the IDE and hardware.
-
-### Software
-Saleae Logic 2 software used.
-
-### Hardware
-Logic analyzer used to verify frequency.
-
-### Images
-Below are images of the project setup and frequency verification.
-
-Setup: ![Project Setup](Images/Blinky/Setup.jpeg)
-
-Frequency Verification: ![Frequency Verification](Images/Blinky/Frequency-Verify.png)
+This project blinks the USR-LED connected to pin PC13 at a frequency of 1 Hz. It is simple project using basic GPIO HAL functions.
 
 ## Crystal-LCD
 ### Overview
@@ -145,3 +101,35 @@ Schematic: ![Schematic](Images/FreeRTOS-Blinky/Schematic.svg)
 Setup: ![Project Setup](Images/FreeRTOS-Blinky/setup.jpeg)
 
 Order and Frequency Verification. Channels 0, 1, and 2 correspond to the red, green and blue LED's respectively: ![Verification](Images/FreeRTOS-Blinky/Pulses.png)
+
+## adc-dma-led-dimmer
+### Overview
+This project takes analog data from a potentiometer then generates a corresponding PWM signal to dim an LED. The analog data is converted to a digital value and these values are stored in a buffer. When the buffer is full, an interrupt is generated which releases a semaphore. The LED control task acquires this semaphore and processes the buffer via DMA. The values in the buffer are used to update the CCR to change the duty cycle of the PWM signal used to drive the LED.
+
+### CMSIS-RTOS Settings
+- All default settings
+
+### TIM Settings
+- Prescaler = 72 - 1 (subtract 1 since register adds 1)
+- ARR = 256 - 1
+- Resulting frequency is 3.906 kHz
+- All other values default 
+
+### Software
+Saleae Logic 2 software used.
+
+### Hardware
+Logic analyzer used to verify response. Oscilloscope used for quick debugging of PWM signals.
+
+### Schematic
+
+Schematic: ![Schematic](Images/adc-dma-led-dimmer/Schematic.svg)
+
+### Images
+Below are images of the project setup and response verification.
+
+Setup: ![Project Setup](Images/adc-dma-led-dimmer/setup.jpeg)
+
+Response Verification. PWM Signal and Analog signal are channels 0 and 1 respectively: ![Response Verification](Images/adc-dma-led-dimmer/Response-Verification.png)
+
+PWM Signal Verification. PWM Signal and Analog signal are channels 0 and 1 respectively: ![PWM Signal Verification](Images/adc-dma-led-dimmer/Accuracy-Verification.png)
