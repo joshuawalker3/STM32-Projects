@@ -51,32 +51,7 @@ Unless otherwise specified, this section contains the default hardware timer con
 This project blinks the USR-LED connected to pin PC13 at a frequency of 1 Hz. It is simple project using basic GPIO HAL functions.
 
 ## Crystal-LCD
-### Overview
-This project prints two lines of text to a 1602-LCD via I2C communication Protocol.
-The process begins by initializing the display in accordance with the [manual](https://cdn-shop.adafruit.com/datasheets/TC1602A-01T.pdf). The program then prints two strings to the display, one string per line. 
-To accommodate the I2C interface for the LCD, each byte of data is sent 4 bits at a time. This requires bit manipulation in the lcd_send_cmd_hi2cx and lcd_send_data_hi2cx functions.
-
-### Software
-Saleae Logic 2 software used.
-
-### Hardware
-Logic analyzer used to verify communication.
-
-### I2C Setup
-- Address length = 7-bit
-- Default settings for all other options
-
-### Schematic
-
-Schematic: ![Schematic](Images/Crystal-LCD/Schematic.svg)
-
-### Images
-
-Setup: ![Project Setup](Images/Crystal-LCD/setup.jpeg)
-
-Initial Initialization Command: ![Initialization](Images/Crystal-LCD/First-Init-Cmd.png)
-
-Sending 'L' Character: ![Send Data](Images/Crystal-LCD/Send-L-Character.png)
+This program utilizes the I2C communication protocol to print data to an LCD. It uses a custom driver for the LCD functions. 
 
 ## FreeRTOS-Blinky
 ### Overview 
