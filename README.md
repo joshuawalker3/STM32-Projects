@@ -54,28 +54,7 @@ This project blinks the USR-LED connected to pin PC13 at a frequency of 1 Hz. It
 This program utilizes the I2C communication protocol to print data to an LCD. It uses a custom driver for the LCD functions. 
 
 ## FreeRTOS-Blinky
-### Overview 
-The purpose of this project is to practice creating and terminating tasks. 
-This project begins by creating three tasks. BlueBlinkTask is responsible for blinking the Blue LED at a frequency of 2.5 Hz. GreenBlinkTask is responsible for blinking the Green LED at a frequency of approximately 0.83 Hz. RedBlinkTask has two responsibilities. The first responsibility is to terminate the the other two tasks after a delay of 2.4 seconds. The task then blinks the red LED at a frequency of 1 Hz.
-
-### Software
-Saleae Logic 2 software used.
-
-### Hardware
-Logic analyzer used to verify frequencies and order of events.
-
-### CMSIS Setup
-- Default settings for all options.
-
-### Schematic
-
-Schematic: ![Schematic](Images/FreeRTOS-Blinky/Schematic.svg)
-
-### Images
-
-Setup: ![Project Setup](Images/FreeRTOS-Blinky/setup.jpeg)
-
-Order and Frequency Verification. Channels 0, 1, and 2 correspond to the red, green and blue LED's respectively: ![Verification](Images/FreeRTOS-Blinky/Pulses.png)
+This program utilizes CMSIS-RTOS to create three tasks that blink three seperate LEDs. Two of the tasks are deleted in the third task.
 
 ## adc-dma-led-dimmer
 ### Overview
