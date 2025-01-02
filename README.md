@@ -3,6 +3,8 @@
 ## Overview
 This repository contains a collection of projects for the STM32F103C8T6 microcontroller. The projects are meant to showcase my abilities and understanding of both the hardaware and software associated with embedded programming with STM32 microcontrollers.
 
+A general overview is provided in this REAMDE with each project directory containing a project level README that provides further detail on the project.
+
 RTOS Skills Used
 - Task creation/termination
 - Semaphores
@@ -56,34 +58,5 @@ This program utilizes the I2C communication protocol to print data to an LCD. It
 ## FreeRTOS-Blinky
 This program utilizes CMSIS-RTOS to create three tasks that blink three seperate LEDs. Two of the tasks are deleted in the third task.
 
-## adc-dma-led-dimmer
-### Overview
-This project takes analog data from a potentiometer then generates a corresponding PWM signal to dim an LED. The analog data is converted to a digital value and these values are stored in a buffer. When the buffer is full, an interrupt is generated which releases a semaphore. The LED control task acquires this semaphore and processes the buffer via DMA. The values in the buffer are used to update the CCR to change the duty cycle of the PWM signal used to drive the LED.
-
-### CMSIS-RTOS Settings
-- All default settings
-
-### TIM Settings
-- Prescaler = 72 - 1 (subtract 1 since register adds 1)
-- ARR = 256 - 1
-- Resulting frequency is 3.906 kHz
-- All other values default 
-
-### Software
-Saleae Logic 2 software used.
-
-### Hardware
-Logic analyzer used to verify response. Oscilloscope used for quick debugging of PWM signals.
-
-### Schematic
-
-Schematic: ![Schematic](Images/adc-dma-led-dimmer/Schematic.svg)
-
-### Images
-Below are images of the project setup and response verification.
-
-Setup: ![Project Setup](Images/adc-dma-led-dimmer/setup.jpeg)
-
-Response Verification. PWM Signal and Analog signal are channels 0 and 1 respectively: ![Response Verification](Images/adc-dma-led-dimmer/Response-Verification.png)
-
-PWM Signal Verification. PWM Signal and Analog signal are channels 0 and 1 respectively: ![PWM Signal Verification](Images/adc-dma-led-dimmer/Accuracy-Verification.png)
+## ADC-DMA-LED-Dimmer
+This program utilizes DMA to store ADC data collected from a potentiometer to generate a PWM signal to drive a LED. Code flow is controlled by DMA interrupt and a binary semaphore.
