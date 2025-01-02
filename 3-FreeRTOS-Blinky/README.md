@@ -28,9 +28,16 @@ Below is the pin connections I used.
 | Positive | PA11 |
 | GND | GND |
 
-A 100 ohm resistor is installed on the GND of each LED.
+| Logic Analyzer | STM32F103C8T6 |
+| --- | ------------- |
+| D0 In | PB1 |
+| D0 GND | GND |
+| D1 In | PA10 |
+| D1 GND | GND |
+| D2 In | PA11 |
+| D2 GND | GND |
 
-The logic analyzer channel 0, 1, and 2 are connected to the positive legs of the red, green, and blue LED's respectively.
+A 100 ohm resistor is installed on the GND of each LED.
 
 ## Schematic
 

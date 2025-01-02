@@ -10,7 +10,13 @@ To compile and flash the program to the chip, I used the 'Run' option in STM32Cu
 Saleae Logic 2 logic analyzer and associated software used to verify frequency.
 
 ## Project Setup
-To setup, I connected the logic analyzer channel 0 input to PC13 to determine frequency of the LED blinking.
+Below is the pin connections I used.
+
+| Logic Analyzer | STM32F103C8T6 |
+| --- | ------------- |
+| D0 In | PA13 |
+| D0 GND | GND |
+
 
 ## Images
 Below are images of the project setup and frequency verification.

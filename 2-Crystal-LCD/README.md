@@ -69,9 +69,14 @@ Below is the pin connections I used.
 | SDA | PB7 |
 | SCL | PB6 |
 
-A 4K7 ohm pull-up resistor is installed between both the SDA and SCL buses and 5V.
+| Logic Analyzer | STM32F103C8T6 |
+| --- | ------------- |
+| D0 In | PB7 |
+| D0 GND | GND |
+| D1 In | PB6 |
+| D1 GND | GND |
 
-The logic analyzer channel 0 and 1 are connected to the SDA and SCL bus respectively.
+A 4K7 ohm pull-up resistor is installed between both the SDA and SCL buses and 5V.
 
 ## I2C Setup
 - Address length = 7-bit
