@@ -17,10 +17,16 @@ Below is the pin connections I used.
 | D0 In | PA13 |
 | D0 GND | GND |
 
+The wire color codes are listed in the table below.
+
+| Color | Signal |
+| --- | ------------- |
+| White | GPIO Output |
+| Black | GND |
+
+Setup: ![Project Setup](../Images/1-Blinky/Setup.jpg)
 
 ## Images
 Below are images of the project setup and frequency verification.
-
-Setup: ![Project Setup](../Images/1-Blinky/Setup.jpeg)
 
 Frequency Verification: ![Frequency Verification](../Images/1-Blinky/Frequency-Verify.png)
