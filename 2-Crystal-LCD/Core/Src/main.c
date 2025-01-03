@@ -32,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define LCD_ADDRESS_1 0x27<<1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -57,8 +57,7 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int row=0;
-int col=0;
+
 /* USER CODE END 0 */
 
 /**
@@ -93,16 +92,13 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   lcd_init_hi2c1(LCD_ADDRESS_1);
-  lcd_put_cur_hi2c1(LCD_ADDRESS_1, 0, 0);
-  lcd_send_string_hi2c1(LCD_ADDRESS_1, "Line 1!");
-  lcd_put_cur_hi2c1(LCD_ADDRESS_1, 1, 0);
-  lcd_send_string_hi2c1(LCD_ADDRESS_1, "Line 2!");
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  lcd_sample_hi2c1(LCD_ADDRESS_1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

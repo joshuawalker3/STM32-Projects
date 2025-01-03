@@ -5,74 +5,72 @@ extern I2C_HandleTypeDef hi2c2;
 
 void lcd_send_cmd_hi2c1(uint16_t addr, char cmd){
   char data_u, data_l;
-	uint8_t data_t[4];
-	data_u = (cmd&0xf0);
-	data_l = ((cmd<<4)&0xf0);
-	data_t[0] = data_u|0x0C;  //en=1, rs=0 -> bxxxx1100
-	data_t[1] = data_u|0x08;  //en=0, rs=0 -> bxxxx1000
-	data_t[2] = data_l|0x0C;  //en=1, rs=0 -> bxxxx1100
-	data_t[3] = data_l|0x08;  //en=0, rs=0 -> bxxxx1000
-	HAL_I2C_Master_Transmit(&hi2c1, addr, (uint8_t *) data_t, 4, 100);
+	uint8_t data_t[PACKET_SIZE];
+	data_u = (cmd & BIT_COMP);
+	data_l = (_GET_LOWER_NIBBLE(cmd) & BIT_COMP);
+	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_LO;
+	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_LO;
+	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_LO;
+	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_LO;
+	HAL_I2C_Master_Transmit(&hi2c1, addr, (uint8_t *) data_t, PACKET_SIZE, MAX_TIMEOUT);
 }
 
 void lcd_send_cmd_hi2c2(uint16_t addr, char cmd){
   char data_u, data_l;
-	uint8_t data_t[4];
-	data_u = (cmd&0xf0);
-	data_l = ((cmd<<4)&0xf0);
-	data_t[0] = data_u|0x0C;  //en=1, rs=0 -> bxxxx1100
-	data_t[1] = data_u|0x08;  //en=0, rs=0 -> bxxxx1000
-	data_t[2] = data_l|0x0C;  //en=1, rs=0 -> bxxxx1100
-	data_t[3] = data_l|0x08;  //en=0, rs=0 -> bxxxx1000
-	HAL_I2C_Master_Transmit(&hi2c2, addr, (uint8_t *) data_t, 4, 100);
+	uint8_t data_t[PACKET_SIZE];
+	data_u = (cmd & BIT_COMP);
+	data_l = (_GET_LOWER_NIBBLE(cmd) & BIT_COMP);
+	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_LO;
+	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_LO;
+	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_LO;
+	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_LO;
+	HAL_I2C_Master_Transmit(&hi2c2, addr, (uint8_t *) data_t, PACKET_SIZE, MAX_TIMEOUT);
 }
 
 void lcd_send_data_hi2c1(uint16_t addr, char data) {
 	char data_u, data_l;
-	uint8_t data_t[4];
-	data_u = (data&0xf0);
-	data_l = ((data<<4)&0xf0);
-	data_t[0] = data_u|0x0D;  //en=1, rs=0 -> bxxxx1101
-	data_t[1] = data_u|0x09;  //en=0, rs=0 -> bxxxx1001
-	data_t[2] = data_l|0x0D;  //en=1, rs=0 -> bxxxx1101
-	data_t[3] = data_l|0x09;  //en=0, rs=0 -> bxxxx1001
-	HAL_I2C_Master_Transmit(&hi2c1, addr, (uint8_t *) data_t, 4, 100);
+	uint8_t data_t[PACKET_SIZE];
+	data_u = (data & BIT_COMP);
+	data_l = (_GET_LOWER_NIBBLE(data) & BIT_COMP);
+	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_HI;
+	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_HI;
+	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_HI;
+	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_HI;
+	HAL_I2C_Master_Transmit(&hi2c1, addr, (uint8_t *) data_t, PACKET_SIZE, MAX_TIMEOUT);
 }
 
 void lcd_send_data_hi2c2(uint16_t addr, char data) {
 	char data_u, data_l;
-	uint8_t data_t[4];
-	data_u = (data&0xf0);
-	data_l = ((data<<4)&0xf0);
-	data_t[0] = data_u|0x0D;  //en=1, rs=0 -> bxxxx1101
-	data_t[1] = data_u|0x09;  //en=0, rs=0 -> bxxxx1001
-	data_t[2] = data_l|0x0D;  //en=1, rs=0 -> bxxxx1101
-	data_t[3] = data_l|0x09;  //en=0, rs=0 -> bxxxx1001
-	HAL_I2C_Master_Transmit(&hi2c2, addr, (uint8_t *) data_t, 4, 100);
+	uint8_t data_t[PACKET_SIZE];
+	data_u = (data & BIT_COMP);
+	data_l = (_GET_LOWER_NIBBLE(data) & BIT_COMP);
+	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_HI;
+	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_HI;
+	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_HI;
+	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_HI;
+	HAL_I2C_Master_Transmit(&hi2c2, addr, (uint8_t *) data_t, PACKET_SIZE, MAX_TIMEOUT);
 }
 
 void lcd_clear_hi2c1(uint16_t addr) {
-	lcd_send_cmd_hi2c1(addr, 0x80);
-	for (int i = 0; i < 70; i++)
-	{
-		lcd_send_data_hi2c1(addr, ' ');
-	}
+	lcd_send_cmd_hi2c1(addr, CLEAR_DISPLAY);
+	HAL_Delay(1);
+	lcd_send_cmd_hi2c1(addr, RET_HOME);
+	HAL_Delay(1);
 }
 
 void lcd_clear_hi2c2(uint16_t addr) {
-	lcd_send_cmd_hi2c1(addr, 0x80);
-	for (int i = 0; i < 70; i++)
-	{
-		lcd_send_data_hi2c2(addr, ' ');
-	}
+	lcd_send_cmd_hi2c2(addr, CLEAR_DISPLAY);
+	HAL_Delay(1);
+	lcd_send_cmd_hi2c2(addr, RET_HOME);
+	HAL_Delay(1);
 }
 
 void lcd_put_cur_hi2c1(uint16_t addr, int row, int col) {
 	switch (row) {
-		case 0:
+		case ROW_1:
 			col |= 0x80;
 		    break;
-		case 1:
+		case ROW_2:
 		    col |= 0xC0;
 		    break;
 	}
@@ -82,10 +80,10 @@ void lcd_put_cur_hi2c1(uint16_t addr, int row, int col) {
 
 void lcd_put_cur_hi2c2(uint16_t addr, int row, int col) {
 	switch (row) {
-		case 0:
+		case ROW_1:
 			col |= 0x80;
 	        break;
-	    case 1:
+	    case ROW_2:
 	        col |= 0xC0;
 	        break;
 	 }
@@ -147,4 +145,122 @@ void lcd_send_string_hi2c2(uint16_t addr, char *str) {
 	while (*str) {
 		lcd_send_data_hi2c2(addr, *str++);
 	}
+}
+
+void lcd_sample_hi2c1(uint16_t addr) {
+	lcd_put_cur_hi2c1(addr, ROW_1, COL_1);
+	lcd_send_string_hi2c1(addr, "This is a");
+	lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
+	lcd_send_string_hi2c1(addr, "Sample of text!");
+	HAL_Delay(1000);
+
+	lcd_clear_hi2c1(addr);
+
+	for (int i = 0; i < 10; i++) {
+		for (int i = COL_1; i <= COL_16; i++) {
+			if (i % 2) {
+				lcd_send_data_hi2c1(addr, BS);
+			}
+			else {
+				lcd_send_data_hi2c1(addr, WS);
+			}
+		}
+
+		lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
+
+		for (int i = COL_1; i <= COL_16; i++) {
+			if (i % 2) {
+				lcd_send_data_hi2c1(addr, WS);
+			}
+			else {
+				lcd_send_data_hi2c1(addr, BS);
+			}
+		}
+
+		HAL_Delay(500);
+
+		lcd_clear_hi2c1(addr);
+
+		for (int i = COL_1; i <= COL_16; i++) {
+			if (i % 2) {
+				lcd_send_data_hi2c1(addr, WS);
+			}
+			else {
+				lcd_send_data_hi2c1(addr, BS);
+			}
+		}
+
+		lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
+
+		for (int i = COL_1; i <= COL_16; i++) {
+			if (i % 2) {
+				lcd_send_data_hi2c1(addr, BS);
+			}
+			else {
+				lcd_send_data_hi2c1(addr, WS);
+			}
+		}
+
+		HAL_Delay(500);
+
+		lcd_clear_hi2c1(addr);
+	}
+}
+
+void lcd_sample_hi2c2(uint16_t addr) {
+	lcd_put_cur_hi2c2(addr, ROW_1, COL_1);
+	lcd_send_string_hi2c2(addr, "This is a");
+	lcd_put_cur_hi2c2(addr, ROW_2, COL_1);
+	lcd_send_string_hi2c2(addr, "Sample of text!");
+	HAL_Delay(1000);
+
+	lcd_clear_hi2c2(addr);
+
+	for (int i = COL_1; i <= COL_16; i++) {
+		if (i % 2) {
+			lcd_send_data_hi2c2(addr, BS);
+		}
+		else {
+			lcd_send_data_hi2c2(addr, WS);
+		}
+	}
+
+	lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
+
+	for (int i = COL_1; i <= COL_16; i++) {
+		if (i % 2) {
+			lcd_send_data_hi2c2(addr, WS);
+		}
+		else {
+			lcd_send_data_hi2c2(addr, BS);
+		}
+	}
+
+	HAL_Delay(500);
+
+	lcd_clear_hi2c2(addr);
+
+	for (int i = COL_1; i <= COL_16; i++) {
+		if (i % 2) {
+			lcd_send_data_hi2c2(addr, WS);
+		}
+		else {
+			lcd_send_data_hi2c2(addr, BS);
+		}
+	}
+
+	lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
+
+	for (int i = COL_1; i <= COL_16; i++) {
+		if (i % 2) {
+			lcd_send_data_hi2c2(addr, BS);
+		}
+		else {
+			lcd_send_data_hi2c2(addr, WS);
+		}
+	}
+
+	HAL_Delay(500);
+
+	lcd_clear_hi2c2(addr);
 }

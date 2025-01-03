@@ -8,8 +8,25 @@
 #ifndef INC_LCD_COMMANDS_H_
 #define INC_LCD_COMMANDS_H_
 
-#define LCD_ADDRESS_1 0x27<<1
-//#define LCD_ADDRESS_2 0x03<<1
+#define ROW_1 0
+#define ROW_2 1
+
+#define COL_1 0
+#define COL_2 1
+#define COL_3 2
+#define COL_4 3
+#define COL_5 4
+#define COL_6 5
+#define COL_7 6
+#define COL_8 7
+#define COL_9 8
+#define COL_10 9
+#define COL_11 10
+#define COL_12 11
+#define COL_13 12
+#define COL_14 13
+#define COL_15 14
+#define COL_16 15
 
 //commands to clear display and return home
 #define CLEAR_DISPLAY 0x01
@@ -53,8 +70,20 @@
 
 //bytes for LCD pin control and byte transmission
 #define BIT_COMP 0xF0
-#define EN_HI 0x0C
-#define ALL_LO 0x08
-#define RS_HI 0x09
+#define LIGHT_HI 0x08
+#define LIGHT_LO 0x00
+#define EN_HI 0x04
+#define EN_LO 0x00
+#define RW_HI 0x02
+#define RW_LO 0x00
+#define RS_HI 0x01
+#define RS_LO 0x00
+#define PACKET_SIZE 4
+#define _GET_LOWER_NIBBLE(x) (x << 4)
+#define MAX_TIMEOUT 100
+
+//for sample program
+#define BS 0xFF
+#define WS 0x20
 
 #endif /* INC_LCD_COMMANDS_H_ */

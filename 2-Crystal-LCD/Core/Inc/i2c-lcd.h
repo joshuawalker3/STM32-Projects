@@ -23,3 +23,7 @@ void lcd_put_cur_hi2c2(uint16_t addr, int row, int col);
 void lcd_clear_hi2c1(uint16_t addr);
 
 void lcd_clear_hi2c2(uint16_t addr);
+
+void lcd_sample_hi2c1(uint16_t addr);
+
+void lcd_sample_hi2c2(uint16_t addr);
