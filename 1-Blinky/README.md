@@ -26,6 +26,10 @@ The wire color codes are listed in the table below.
 
 Setup: ![Project Setup](../Images/1-Blinky/Setup.jpg)
 
+## Schematic
+
+Schematic: ![Schematic](../Images/1-Blinky/Schematic.svg)
+
 ## Images
 Below are images of the project setup and frequency verification.
 
