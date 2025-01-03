@@ -364,7 +364,7 @@
     },
     "net_format_name": "",
     "page_layout_descr_file": "",
-    "plot_directory": "/home/joshuawalker/STM32-Projects/Images/Crystal-LCD/",
+    "plot_directory": "/home/joshuawalker/STM32-Projects/Images/2-Crystal-LCD/",
     "spice_current_sheet_as_root": false,
     "spice_external_command": "spice \"%I\"",
     "spice_model_current_sheet_as_root": true,
@@ -377,7 +377,7 @@
   "sheets": [
     [
       "b3e4c80f-fad7-4f40-bc16-299690e88fbf",
-      ""
+      "Root"
     ]
   ],
   "text_variables": {}
