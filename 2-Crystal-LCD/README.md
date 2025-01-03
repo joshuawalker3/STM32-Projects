@@ -78,6 +78,17 @@ Below is the pin connections I used.
 
 A 4K7 ohm pull-up resistor is installed between both the SDA and SCL buses and 5V.
 
+The wire color codes are listed in the table below.
+
+| Color | Signal |
+| --- | ------------- |
+| Red | 5V |
+| Black | GND |
+| Yellow | SDA |
+| Brown | SCL |
+
+Setup: ![Project Setup](../Images/2-Crystal-LCD/Setup.jpg)
+
 ## I2C Setup
 - Address length = 7-bit
 - Default settings for all other options
@@ -87,8 +98,6 @@ A 4K7 ohm pull-up resistor is installed between both the SDA and SCL buses and 5
 Schematic: ![Schematic](../Images/2-Crystal-LCD/Schematic.svg)
 
 ## Images
-
-Setup: ![Project Setup](../Images/2-Crystal-LCD/setup.jpeg)
 
 Initial Initialization Command: ![Initialization](../Images/2-Crystal-LCD/First-Init-Cmd.png)
 
