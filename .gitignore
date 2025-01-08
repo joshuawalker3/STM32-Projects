@@ -4,6 +4,10 @@
 #metadata
 .metadata/
 
+#kicad
+*.lck
+Schematic-Backups/
+
 #Debug
 Debug/
 debug/
@@ -50,4 +54,7 @@ release
 *.su
 *.idb
 *.pdb
+*.jdebug
+*.jdebug.user
 
+*.launch
