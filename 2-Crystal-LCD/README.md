@@ -4,7 +4,7 @@ This project runs a sample program that prints sample text and an alternating pa
 
 The process begins by initializing the internal clock and clock for the pins used for the I2C bus. I2C bus hi2c1 is then initialized. Finally, the display is initialized in accordance with the [manual](https://cdn-shop.adafruit.com/datasheets/TC1602A-01T.pdf). Upon completion of initialization, the sample program runs in a super loop.
 
-To accommodate the I2C interface for the LCD, each byte of data is sent 4 bits at a time. This requires bit manipulation in the lcd_send_cmd_hi2cx and lcd_send_data_hi2cx functions.
+To accommodate the I2C interface for the LCD, each byte of data is sent 4 bits at a time. This requires bit manipulation of commands and characters sent to the LCD.
 
 To compile and flash the program to the chip, I used the 'Run' option in STM32CubeIDE. To connect the board to the computer I used an ST-Link/V2.
 
@@ -21,43 +21,7 @@ Unless otherwise specified, this section contains the default hardware timer con
 - HCLK = 72 MHz
 
 ## Custom Driver
-For this project I wrote a custom driver for the LCD (i2c-lcd.h). The functions and a brief description of their use are described below. The hi2c1 and or hi2c2 bus must be initialized before calling these functions.
-
-void lcd_init_hi2c1(uint16_t addr)\
-	- Initializes the LCD at address on i2c bus hi2c1
-
-void lcd_init_hi2c2(uint16_t addr)\
-	- Initializes the LCD at address on i2c bus hi2c2
-
-void lcd_send_cmd_hi2c1(uint16_t addr, char cmd)\
-	- Send command to the LCD at address on i2c bus hi2c1. Commands are defined in lcd-commands.h
-
-void lcd_send_cmd_hi2c2(uint16_t addr, char cmd)\
-	- Send command to the LCD at address on i2c bus hi2c2. Commands are defined in lcd-commands.h
-
-void lcd_send_data_hi2c1(uint16_t addr, char data)\
-	- Send data to the LCD at address addr on i2c bus hi2c1
-
-void lcd_send_data_hi2c2(uint16_t addr, char data)\
-	- Send data to the LCD at address addr on i2c bus hi2c2
-
-void lcd_send_string_hi2c1(uint16_t addr, char \*str)\
-	- Send string to the LCD at address addr on i2c bus hi2c1 
-
-void lcd_send_string_hi2c2(uint16_t addr, char \*str)\
-	- Send string to the LCD at address addr on i2c bus hi2c2
-
-void lcd_put_cur_hi2c1(uint16_t addr, int row, int col)\
-	- Move cursor to specified row, range [0, 1], and column, range [0, 15], for LCD at address on hi2c1 bus
-
-void lcd_put_cur_hi2c2(uint16_t addr, int row, int col)\
-	- Move cursor to specified row, range [0, 1], and column, range [0, 15], for LCD at address on hi2c2 bus
-
-void lcd_clear_hi2c1(uint16_t addr)\
-	- Clear display for LCD at address on hi2c1 bus
-
-void lcd_clear_hi2c2(uint16_t addr)\
-	- Clear display for LCD at address on hi2c1 bus
+For this project I utilized a custom driver that I wrote for the LCD (i2c-lcd.h). The functions and a brief description of their use are described [here](https://github.com/joshuawalker3/STM32-Drivers).
 
 ## Communication
 Since the I2C backpack interacts with the LCD in 4-bit interface, commands and data must be sent one nibble at a time. The initaial byte to be sent is first split into two bytes where the most significant nibble is either the upper or lower four bits of the original byte. The connections between the LCD I2C backpack and the LCD are given in the below table.

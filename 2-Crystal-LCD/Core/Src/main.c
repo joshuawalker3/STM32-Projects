@@ -22,7 +22,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "i2c-lcd.h"
-#include "lcd-commands.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,7 +31,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LCD_ADDRESS_1 0x27<<1
+#define LCD_ADDR 0x27<<1
+#define BS 0xFF
+#define WS 0x20
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,7 +45,7 @@
 I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
-
+Lcd_HandleTypeDef* lcd;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -52,7 +53,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
-
+void lcd_sample(Lcd_HandleTypeDef* lcd);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -91,14 +92,15 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  lcd_init_hi2c1(LCD_ADDRESS_1);
+  lcd = lcd_open(&hi2c1, LCD_ADDR, NO_RTOS);
+  lcd_init(lcd);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  lcd_sample_hi2c1(LCD_ADDRESS_1);
+	  lcd_sample(lcd);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -198,7 +200,66 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void lcd_sample(Lcd_HandleTypeDef* lcd) {
+	lcd_ioctrl(lcd, DDRAM_SET|ROW_01|COL_01);
+	lcd_write(lcd, (void*)"This is a", WRITE_STRING);
+	lcd_ioctrl(lcd, DDRAM_SET|ROW_02|COL_01);
+	lcd_write(lcd, (void*)"Sample of text!", WRITE_STRING);
 
+	HAL_Delay(1000);
+
+	lcd_ioctrl(lcd, CLEAR_DISPLAY);
+
+	for (int i = 0; i < 10; i++) {
+		for (int i = COL_01; i <= COL_16; i++) {
+			if (i % 2) {
+				lcd_write(lcd, (void*)BS, WRITE_STRING);
+			}
+			else {
+				lcd_write(lcd, (void*)WS, WRITE_STRING);
+			}
+		}
+
+		lcd_ioctrl(lcd, DDRAM_SET|ROW_02|COL_01);
+
+		for (int i = COL_01; i <= COL_16; i++) {
+			if (i % 2) {
+				lcd_write(lcd, (void*)WS, WRITE_STRING);
+			}
+			else {
+				lcd_write(lcd, (void*)BS, WRITE_STRING);
+			}
+		}
+
+		HAL_Delay(500);
+
+		lcd_ioctrl(lcd, CLEAR_DISPLAY);
+
+		for (int i = COL_01; i <= COL_16; i++) {
+			if (i % 2) {
+				lcd_write(lcd, (void*)WS, WRITE_STRING);
+			}
+			else {
+				lcd_write(lcd, (void*)BS, WRITE_STRING);
+			}
+		}
+
+		lcd_ioctrl(lcd, DDRAM_SET|ROW_02|COL_01);
+
+		for (int i = COL_01; i <= COL_16; i++) {
+			if (i % 2) {
+				lcd_write(lcd, (void*)BS, WRITE_STRING);
+			}
+			else {
+				lcd_write(lcd, (void*)WS, WRITE_STRING);
+			}
+		}
+
+		HAL_Delay(500);
+
+		lcd_ioctrl(lcd, CLEAR_DISPLAY);
+	}
+}
 /* USER CODE END 4 */
 
 /**
