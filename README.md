@@ -1,7 +1,7 @@
-# Projects Using STM32F103C8T6 Microcontroller
+# Projects Using STM32 Microcontroller
 
 ## Overview
-This repository contains a collection of projects for the STM32F103C8T6 microcontroller. The projects are meant to showcase my abilities and understanding of both the hardaware and software associated with embedded programming with STM32 microcontrollers.
+This repository contains a collection of projects for the STM32F103C8T6 and STM32F767ZI microcontrollers. The projects are meant to showcase my abilities and understanding of both the hardaware and software associated with embedded programming with STM32 microcontrollers.
 
 A general overview is provided in this REAMDE with each project directory containing a project level README that provides further detail on the project.
 
@@ -35,11 +35,12 @@ Software used
 ## Hardware
 For development of device drivers, I used a STM32F103C8T6 development board. For the development of Free RTOS applications I used a STM32F767ZI development board.
 
+> [!NOTE] 
+> Development of device drivers has been moved to [this repo](https://github.com/joshuawalker3/STM32-Drivers)
+
 ## General Software Used
 Applications were written using the STM32CubeIDE environement and the automatically generated STM32 HAL was utilized.
 When other software or API's are used (i.e. CSMIS-RTOS) they will be listed in the projects software section.
-
-
 
 # Projects
 
@@ -54,3 +55,6 @@ This program utilizes CMSIS-RTOS to create two tasks that blink two seperate LED
 
 ## ADC-DMA-LED-Dimmer
 This program utilizes DMA to store ADC data collected from a potentiometer to generate a PWM signal to drive a LED. Code flow is controlled by DMA interrupt and a binary semaphore.
+
+## Temp-Humidity-I2C
+This program utilizes a queue to transfer data between an AHT10 sensor and an LCD with both being connected to the same I2C bus.
