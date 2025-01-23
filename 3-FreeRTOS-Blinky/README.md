@@ -26,22 +26,22 @@ Saleae Logic 2 logic analyzer and associated software used to verify frequency a
 ## Project Setup
 Below is the pin connections I used.
 
-| Red LED | STM32F103C8T6 |
+| Red LED | STM32F67ZI |
 | ------- | ------------- |
 | Positive | PB8 |
 | GND | GND |
 
-| Green LED | STM32F103C8T6 |
+| Green LED | STM32F67ZI |
 | ------- | ------------- |
 | Positive | PB9 |
 | GND | GND |
 
-| Blue LED | STM32F103C8T6 |
+| Blue LED | STM32F67ZI |
 | ------- | ------------- |
 | Positive | PA5 |
 | GND | GND |
 
-| Logic Analyzer | STM32F103C8T6 |
+| Logic Analyzer | STM32F67ZI |
 | --- | ------------- |
 | D0 In | PA5 |
 | D0 GND | GND |

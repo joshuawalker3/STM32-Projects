@@ -52,18 +52,18 @@ This calculation can be verified using the numbers below. The product of the dut
 ## Project Setup
 Below is the pin connections I used.
 
-| Green LED | STM32F103C8T6 |
+| Green LED | STM32F67ZI |
 | ------- | ------------- |
 | Positive | PE9 |
 | GND | GND |
 
-| Potentiometer | STM32F103C8T6 |
+| Potentiometer | STM32F67ZI |
 | ------- | ------------- |
 | Pin 1 | GND |
 | Pin 2 | PA3 |
 | Pin 3 | 3.3V |
 
-| Logic Analyzer | STM32F103C8T6 |
+| Logic Analyzer | STM32F67ZI |
 | --- | ------------- |
 | D0 In | PE9 |
 | D0 GND | GND |
