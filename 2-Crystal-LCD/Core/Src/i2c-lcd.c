@@ -1,266 +1,235 @@
 #include "i2c-lcd.h"
-#include "lcd-commands.h"
-extern I2C_HandleTypeDef hi2c1;
-extern I2C_HandleTypeDef hi2c2;
+#include <stdio.h>
+#include <stdlib.h>
 
-void lcd_send_cmd_hi2c1(uint16_t addr, char cmd){
-  char data_u, data_l;
-	uint8_t data_t[PACKET_SIZE];
-	data_u = (cmd & BIT_COMP);
-	data_l = (_GET_LOWER_NIBBLE(cmd) & BIT_COMP);
-	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_LO;
-	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_LO;
-	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_LO;
-	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_LO;
-	HAL_I2C_Master_Transmit(&hi2c1, addr, (uint8_t *) data_t, PACKET_SIZE, MAX_TIMEOUT);
+const char CUSTOM_CHAR_01 = 0x00;
+const char CUSTOM_CHAR_02 = 0x01;
+const char CUSTOM_CHAR_03 = 0x02;
+const char CUSTOM_CHAR_04 = 0x03;
+const char CUSTOM_CHAR_05 = 0x04;
+const char CUSTOM_CHAR_06 = 0x05;
+const char CUSTOM_CHAR_07 = 0x06;
+const char CUSTOM_CHAR_08 = 0x07;
+
+Lcd_HandleTypeDef* lcd_open(I2C_HandleTypeDef* hi2c, uint16_t addr, Os_Mode mode) {
+	if (!hi2c) {
+		return NULL;
+	}
+
+	Lcd_HandleTypeDef* new_lcd = (Lcd_HandleTypeDef*)malloc(sizeof(Lcd_HandleTypeDef));
+
+	new_lcd->hi2c = hi2c;
+	new_lcd->addr = addr<<1;
+	new_lcd->mode = mode;
+
+	return new_lcd;
 }
 
-void lcd_send_cmd_hi2c2(uint16_t addr, char cmd){
-  char data_u, data_l;
-	uint8_t data_t[PACKET_SIZE];
-	data_u = (cmd & BIT_COMP);
-	data_l = (_GET_LOWER_NIBBLE(cmd) & BIT_COMP);
-	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_LO;
-	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_LO;
-	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_LO;
-	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_LO;
-	HAL_I2C_Master_Transmit(&hi2c2, addr, (uint8_t *) data_t, PACKET_SIZE, MAX_TIMEOUT);
+HAL_StatusTypeDef lcd_init(Lcd_HandleTypeDef* lcd) {
+	if (!lcd) {
+		return HAL_ERROR;
+	}
+
+	HAL_StatusTypeDef status;
+
+	_DELAY(lcd->mode, 50);
+
+	status = lcd_ioctrl(lcd, FUNCTION_SET|BIT_MODE_8);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	_DELAY(lcd->mode, 5);
+
+	status = lcd_ioctrl(lcd, FUNCTION_SET|BIT_MODE_8);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	_DELAY(lcd->mode, 1);
+
+	status = lcd_ioctrl(lcd, FUNCTION_SET|BIT_MODE_8);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	_DELAY(lcd->mode, 10);
+
+	status = lcd_ioctrl(lcd, FUNCTION_SET|BIT_MODE_4);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	_DELAY(lcd->mode, 10);
+
+	status = lcd_ioctrl(lcd, FUNCTION_SET|LINES_2|FONT_5x8);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	_DELAY(lcd->mode, 1);
+
+	status = lcd_ioctrl(lcd, DISP_CTRL|DISP_OFF|CURS_OFF|CURS_SOLID);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	_DELAY(lcd->mode, 1);
+
+	status = lcd_ioctrl(lcd, CLEAR_DISPLAY);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	_DELAY(lcd->mode, 2);
+
+	status = lcd_ioctrl(lcd, ENTRY_MODE_SET|CURS_INCR|SCREEN_SHIFT_DIS);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	_DELAY(lcd->mode, 1);
+
+	return lcd_ioctrl(lcd, DISP_CTRL|DISP_ON|CURS_ON|CURS_BLINK);
 }
 
-void lcd_send_data_hi2c1(uint16_t addr, char data) {
+HAL_StatusTypeDef lcd_write_char(Lcd_HandleTypeDef* lcd, char* data) {
 	char data_u, data_l;
 	uint8_t data_t[PACKET_SIZE];
-	data_u = (data & BIT_COMP);
-	data_l = (_GET_LOWER_NIBBLE(data) & BIT_COMP);
+	data_u = (*data & BIT_COMP);
+	data_l = (_GET_LOWER_NIBBLE(*data) & BIT_COMP);
+
 	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_HI;
 	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_HI;
 	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_HI;
 	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_HI;
-	HAL_I2C_Master_Transmit(&hi2c1, addr, (uint8_t *) data_t, PACKET_SIZE, MAX_TIMEOUT);
+
+	return HAL_I2C_Master_Transmit(lcd->hi2c, lcd->addr, data_t, PACKET_SIZE, MAX_TIMEOUT);
 }
 
-void lcd_send_data_hi2c2(uint16_t addr, char data) {
+HAL_StatusTypeDef lcd_write_string(Lcd_HandleTypeDef* lcd, void* void_str) {
+	char* str = (char*)void_str;
+
+	HAL_StatusTypeDef status;
+
+	while (*str) {
+		status = lcd_write_char(lcd, str++);
+		if (status != HAL_OK) {
+			return status;
+		}
+	}
+
+	return status;
+}
+
+HAL_StatusTypeDef lcd_write_integer(Lcd_HandleTypeDef* lcd, void* void_num) {
+	int* num = (int*)void_num;
+
+	uint8_t chars;
+	char str[20];
+
+	chars = sprintf(str, "%d", *num);
+	if (chars == 0) {
+		return HAL_ERROR;
+	}
+
+	return lcd_write_string(lcd, str);
+}
+
+HAL_StatusTypeDef lcd_write_float(Lcd_HandleTypeDef* lcd, void* void_num) {
+	float* num = (float*)void_num;
+
+	uint8_t chars;
+	char str[20];
+
+	chars = sprintf(str, "%f", *num);
+	if (chars == 0) {
+		return HAL_ERROR;
+	}
+
+	return lcd_write_string(lcd, str);
+}
+
+HAL_StatusTypeDef lcd_create_char(Lcd_HandleTypeDef* lcd, void* char_bytes) {
+	char* array = (char*)char_bytes;
+
+	HAL_StatusTypeDef status;
+
+	status = lcd_ioctrl(lcd, CGRAM_SET | *array++);
+	if (status != HAL_OK) {
+		return status;
+	}
+
+	for (int i = 0; i < 8; i++) {
+		status = lcd_write_char(lcd, array++);
+		if (status != HAL_OK) {
+			return status;
+		}
+	}
+
+	lcd_ioctrl(lcd, CLEAR_DISPLAY);
+
+	return status;
+}
+
+HAL_StatusTypeDef lcd_write(Lcd_HandleTypeDef* lcd, void* data, Write_Type type) {
+	if (!lcd) {
+			return HAL_ERROR;
+	}
+
+	HAL_StatusTypeDef status;
+
+	switch(type) {
+		case WRITE_STRING:
+			status = lcd_write_string(lcd, data);
+			break;
+		case WRITE_INT:
+			status = lcd_write_integer(lcd, data);
+			break;
+		case WRITE_FLOAT:
+			status = lcd_write_float(lcd, data);
+			break;
+		case WRITE_CUSTOM:
+			status = lcd_write_char(lcd, data);
+			break;
+		case CREATE_CHAR:
+			status = lcd_create_char(lcd, data);
+			break;
+		default:
+			return HAL_ERROR;
+	}
+
+	return status;
+}
+
+HAL_StatusTypeDef lcd_ioctrl(Lcd_HandleTypeDef* lcd, char cmd) {
+	if (!lcd) {
+		return HAL_ERROR;
+	}
+
 	char data_u, data_l;
 	uint8_t data_t[PACKET_SIZE];
-	data_u = (data & BIT_COMP);
-	data_l = (_GET_LOWER_NIBBLE(data) & BIT_COMP);
-	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_HI;
-	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_HI;
-	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_HI;
-	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_HI;
-	HAL_I2C_Master_Transmit(&hi2c2, addr, (uint8_t *) data_t, PACKET_SIZE, MAX_TIMEOUT);
+	data_u = (cmd & BIT_COMP);
+	data_l = (_GET_LOWER_NIBBLE(cmd) & BIT_COMP);
+
+	data_t[0] = data_u | LIGHT_HI | EN_HI | RW_LO | RS_LO;
+	data_t[1] = data_u | LIGHT_HI | EN_LO | RW_LO | RS_LO;
+	data_t[2] = data_l | LIGHT_HI | EN_HI | RW_LO | RS_LO;
+	data_t[3] = data_l | LIGHT_HI | EN_LO | RW_LO | RS_LO;
+
+	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(lcd->hi2c, lcd->addr, data_t, PACKET_SIZE, MAX_TIMEOUT);
+
+	_DELAY(lcd->mode, 1);
+
+	return status;
 }
 
-void lcd_clear_hi2c1(uint16_t addr) {
-	lcd_send_cmd_hi2c1(addr, CLEAR_DISPLAY);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c1(addr, RET_HOME);
-	HAL_Delay(1);
-}
-
-void lcd_clear_hi2c2(uint16_t addr) {
-	lcd_send_cmd_hi2c2(addr, CLEAR_DISPLAY);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c2(addr, RET_HOME);
-	HAL_Delay(1);
-}
-
-void lcd_put_cur_hi2c1(uint16_t addr, int row, int col) {
-	switch (row) {
-		case ROW_1:
-			col |= 0x80;
-		    break;
-		case ROW_2:
-		    col |= 0xC0;
-		    break;
+HAL_StatusTypeDef lcd_close(Lcd_HandleTypeDef* lcd) {
+	if (!lcd) {
+		return HAL_ERROR;
 	}
 
-	lcd_send_cmd_hi2c1(addr, col);
-}
+	free(lcd);
 
-void lcd_put_cur_hi2c2(uint16_t addr, int row, int col) {
-	switch (row) {
-		case ROW_1:
-			col |= 0x80;
-	        break;
-	    case ROW_2:
-	        col |= 0xC0;
-	        break;
-	 }
-
-	 lcd_send_cmd_hi2c2(addr, col);
-}
-
-void lcd_init_hi2c1(uint16_t addr) {
-	HAL_Delay(50);
-	lcd_send_cmd_hi2c1(addr, FUNCTION_SET|BIT_MODE_8);
-	HAL_Delay(5);
-	lcd_send_cmd_hi2c1(addr, FUNCTION_SET|BIT_MODE_8);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c1(addr, FUNCTION_SET|BIT_MODE_8);
-	HAL_Delay(10);
-	lcd_send_cmd_hi2c1(addr, FUNCTION_SET|BIT_MODE_4);
-	HAL_Delay(10);
-
-	lcd_send_cmd_hi2c1(addr, FUNCTION_SET|LINES_2|FONT_5x11);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c1(addr, DISP_CTRL|DISP_OFF|CURS_OFF|CURS_SOLID);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c1(addr, CLEAR_DISPLAY);
-	HAL_Delay(2);
-	lcd_send_cmd_hi2c1(addr, ENTRY_MODE_SET|CURS_INCR|SCREEN_SHIFT_DIS);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c1(addr, DISP_CTRL|DISP_ON|CURS_ON|CURS_BLINK);
-}
-
-void lcd_init_hi2c2(uint16_t addr) {
-	HAL_Delay(50);
-	lcd_send_cmd_hi2c2(addr, FUNCTION_SET|BIT_MODE_8);
-	HAL_Delay(5);
-	lcd_send_cmd_hi2c2(addr, FUNCTION_SET|BIT_MODE_8);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c2(addr, FUNCTION_SET|BIT_MODE_8);
-	HAL_Delay(10);
-	lcd_send_cmd_hi2c2(addr, FUNCTION_SET|BIT_MODE_4);
-	HAL_Delay(10);
-
-	lcd_send_cmd_hi2c2(addr, FUNCTION_SET|LINES_2|FONT_5x11);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c2(addr, DISP_CTRL|DISP_OFF|CURS_OFF|CURS_SOLID);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c2(addr, CLEAR_DISPLAY);
-	HAL_Delay(2);
-	lcd_send_cmd_hi2c2(addr, ENTRY_MODE_SET|CURS_INCR|SCREEN_SHIFT_DIS);
-	HAL_Delay(1);
-	lcd_send_cmd_hi2c2(addr, DISP_CTRL|DISP_ON|CURS_ON|CURS_BLINK);
-}
-
-void lcd_send_string_hi2c1(uint16_t addr, char *str) {
-	while (*str) {
-		lcd_send_data_hi2c1(addr, *str++);
-	}
-}
-
-void lcd_send_string_hi2c2(uint16_t addr, char *str) {
-	while (*str) {
-		lcd_send_data_hi2c2(addr, *str++);
-	}
-}
-
-void lcd_sample_hi2c1(uint16_t addr) {
-	lcd_put_cur_hi2c1(addr, ROW_1, COL_1);
-	lcd_send_string_hi2c1(addr, "This is a");
-	lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
-	lcd_send_string_hi2c1(addr, "Sample of text!");
-	HAL_Delay(1000);
-
-	lcd_clear_hi2c1(addr);
-
-	for (int i = 0; i < 10; i++) {
-		for (int i = COL_1; i <= COL_16; i++) {
-			if (i % 2) {
-				lcd_send_data_hi2c1(addr, BS);
-			}
-			else {
-				lcd_send_data_hi2c1(addr, WS);
-			}
-		}
-
-		lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
-
-		for (int i = COL_1; i <= COL_16; i++) {
-			if (i % 2) {
-				lcd_send_data_hi2c1(addr, WS);
-			}
-			else {
-				lcd_send_data_hi2c1(addr, BS);
-			}
-		}
-
-		HAL_Delay(500);
-
-		lcd_clear_hi2c1(addr);
-
-		for (int i = COL_1; i <= COL_16; i++) {
-			if (i % 2) {
-				lcd_send_data_hi2c1(addr, WS);
-			}
-			else {
-				lcd_send_data_hi2c1(addr, BS);
-			}
-		}
-
-		lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
-
-		for (int i = COL_1; i <= COL_16; i++) {
-			if (i % 2) {
-				lcd_send_data_hi2c1(addr, BS);
-			}
-			else {
-				lcd_send_data_hi2c1(addr, WS);
-			}
-		}
-
-		HAL_Delay(500);
-
-		lcd_clear_hi2c1(addr);
-	}
-}
-
-void lcd_sample_hi2c2(uint16_t addr) {
-	lcd_put_cur_hi2c2(addr, ROW_1, COL_1);
-	lcd_send_string_hi2c2(addr, "This is a");
-	lcd_put_cur_hi2c2(addr, ROW_2, COL_1);
-	lcd_send_string_hi2c2(addr, "Sample of text!");
-	HAL_Delay(1000);
-
-	lcd_clear_hi2c2(addr);
-
-	for (int i = COL_1; i <= COL_16; i++) {
-		if (i % 2) {
-			lcd_send_data_hi2c2(addr, BS);
-		}
-		else {
-			lcd_send_data_hi2c2(addr, WS);
-		}
-	}
-
-	lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
-
-	for (int i = COL_1; i <= COL_16; i++) {
-		if (i % 2) {
-			lcd_send_data_hi2c2(addr, WS);
-		}
-		else {
-			lcd_send_data_hi2c2(addr, BS);
-		}
-	}
-
-	HAL_Delay(500);
-
-	lcd_clear_hi2c2(addr);
-
-	for (int i = COL_1; i <= COL_16; i++) {
-		if (i % 2) {
-			lcd_send_data_hi2c2(addr, WS);
-		}
-		else {
-			lcd_send_data_hi2c2(addr, BS);
-		}
-	}
-
-	lcd_put_cur_hi2c1(addr, ROW_2, COL_1);
-
-	for (int i = COL_1; i <= COL_16; i++) {
-		if (i % 2) {
-			lcd_send_data_hi2c2(addr, BS);
-		}
-		else {
-			lcd_send_data_hi2c2(addr, WS);
-		}
-	}
-
-	HAL_Delay(500);
-
-	lcd_clear_hi2c2(addr);
+	return HAL_OK;
 }
