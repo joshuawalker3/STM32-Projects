@@ -92,7 +92,7 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  lcd = lcd_open(&hi2c1, LCD_ADDR, NO_RTOS);
+  lcd_open(lcd, &hi2c1, LCD_ADDR, NO_RTOS);
   lcd_init(lcd);
   /* USER CODE END 2 */
 

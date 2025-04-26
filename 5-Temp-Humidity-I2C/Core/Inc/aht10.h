@@ -25,7 +25,6 @@
 
 #ifndef _DELAY
 	#ifdef CMSIS_OS_H_
-		#include "cmsis_os.h"
 		#define _DELAY(os_mode, x) \
 			if (os_mode == NO_RTOS) { \
 				HAL_Delay(x); \
@@ -70,7 +69,7 @@ typedef struct {
 	uint8_t buffer[6];
 } Aht10_HandleTypeDef;
 
-Aht10_HandleTypeDef* aht10_open(I2C_HandleTypeDef* hi2c, Os_Mode mode);
+HAL_StatusTypeDef aht10_open(Aht10_HandleTypeDef* aht10, I2C_HandleTypeDef* hi2c, Os_Mode mode);
 
 HAL_StatusTypeDef aht10_init(Aht10_HandleTypeDef* aht10, GPIO_TypeDef* power_pin_port, uint16_t power_pin, Temp_Unit units);
 
@@ -78,6 +77,5 @@ HAL_StatusTypeDef aht10_read(Aht10_HandleTypeDef* aht10, int16_t* temp, uint8_t*
 
 HAL_StatusTypeDef aht10_ioctrl(Aht10_HandleTypeDef* aht10, Aht10_Cmd cmd);
 
-HAL_StatusTypeDef aht10_close(Aht10_HandleTypeDef* aht10);
 
 #endif /* INC_AHT10_H_ */

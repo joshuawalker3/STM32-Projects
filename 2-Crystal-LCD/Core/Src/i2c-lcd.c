@@ -11,18 +11,16 @@ const char CUSTOM_CHAR_06 = 0x05;
 const char CUSTOM_CHAR_07 = 0x06;
 const char CUSTOM_CHAR_08 = 0x07;
 
-Lcd_HandleTypeDef* lcd_open(I2C_HandleTypeDef* hi2c, uint16_t addr, Os_Mode mode) {
+HAL_StatusTypeDef lcd_open(Lcd_HandleTypeDef* lcd, I2C_HandleTypeDef* hi2c, uint16_t addr, Os_Mode mode) {
 	if (!hi2c) {
-		return NULL;
+		return HAL_ERROR;
 	}
 
-	Lcd_HandleTypeDef* new_lcd = (Lcd_HandleTypeDef*)malloc(sizeof(Lcd_HandleTypeDef));
+	lcd->hi2c = hi2c;
+	lcd->addr = addr<<1;
+	lcd->mode = mode;
 
-	new_lcd->hi2c = hi2c;
-	new_lcd->addr = addr<<1;
-	new_lcd->mode = mode;
-
-	return new_lcd;
+	return HAL_OK;
 }
 
 HAL_StatusTypeDef lcd_init(Lcd_HandleTypeDef* lcd) {
@@ -222,14 +220,4 @@ HAL_StatusTypeDef lcd_ioctrl(Lcd_HandleTypeDef* lcd, char cmd) {
 	_DELAY(lcd->mode, 1);
 
 	return status;
-}
-
-HAL_StatusTypeDef lcd_close(Lcd_HandleTypeDef* lcd) {
-	if (!lcd) {
-		return HAL_ERROR;
-	}
-
-	free(lcd);
-
-	return HAL_OK;
 }

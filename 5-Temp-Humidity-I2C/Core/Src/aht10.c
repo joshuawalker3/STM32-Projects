@@ -35,17 +35,15 @@ uint8_t calc_humidity(Aht10_HandleTypeDef* aht10) {
 	return (humid_raw * 100) >> 20;
 }
 
-Aht10_HandleTypeDef* aht10_open(I2C_HandleTypeDef* hi2c, Os_Mode mode){
+HAL_StatusTypeDef aht10_open(Aht10_HandleTypeDef* aht10, I2C_HandleTypeDef* hi2c, Os_Mode mode){
 	if (!hi2c) {
-		return NULL;
+		return HAL_ERROR;
 	}
 
-	Aht10_HandleTypeDef* new_aht10 = (Aht10_HandleTypeDef*)malloc(sizeof(Aht10_HandleTypeDef));
+	aht10->mode = mode;
+	aht10->hi2c = hi2c;
 
-	new_aht10->mode = mode;
-	new_aht10->hi2c = hi2c;
-
-	return new_aht10;
+	return HAL_OK;
 }
 
 HAL_StatusTypeDef aht10_init(Aht10_HandleTypeDef* aht10, GPIO_TypeDef* power_pin_port, uint16_t power_pin, Temp_Unit units) {
@@ -116,16 +114,6 @@ HAL_StatusTypeDef aht10_ioctrl(Aht10_HandleTypeDef* aht10, Aht10_Cmd cmd) {
 			return HAL_ERROR;
 			break;
 	}
-
-	return HAL_OK;
-}
-
-HAL_StatusTypeDef aht10_close(Aht10_HandleTypeDef* aht10) {
-	if (!aht10) {
-		return HAL_ERROR;
-	}
-
-	free(aht10);
 
 	return HAL_OK;
 }

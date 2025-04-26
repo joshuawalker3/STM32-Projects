@@ -5,7 +5,6 @@
 
 #ifndef _DELAY
 	#ifdef CMSIS_OS_H_
-		#include "cmsis_os.h"
 		#define _DELAY(os_mode, x) \
 			if (os_mode == NO_RTOS) { \
 				HAL_Delay(x); \
@@ -140,7 +139,7 @@ typedef struct {
 
 
 
-Lcd_HandleTypeDef* lcd_open(I2C_HandleTypeDef* hi2c, uint16_t addr, Os_Mode mode);
+HAL_StatusTypeDef lcd_open(Lcd_HandleTypeDef* lcd, I2C_HandleTypeDef* hi2c, uint16_t addr, Os_Mode mode);
 
 HAL_StatusTypeDef lcd_init(Lcd_HandleTypeDef* lcd);
 
@@ -148,6 +147,5 @@ HAL_StatusTypeDef lcd_write(Lcd_HandleTypeDef* lcd, void* data, Write_Type type)
 
 HAL_StatusTypeDef lcd_ioctrl(Lcd_HandleTypeDef* lcd, char cmd);
 
-HAL_StatusTypeDef lcd_close(Lcd_HandleTypeDef* lcd);
 
 #endif

@@ -167,8 +167,8 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
-  lcd = lcd_open(&hi2c2, LCD_ADDR, NO_RTOS);
-  aht10 = aht10_open(&hi2c2, NO_RTOS);
+  lcd_open(lcd, &hi2c2, LCD_ADDR, NO_RTOS);
+  aht10_open(aht10, &hi2c2, NO_RTOS);
 
   if (lcd_init(lcd) != HAL_OK) {
 	  while (1) {
